@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="current-game" v-if="currentScore > 0">
+        <div class="current-game" v-if="(currentScore ?? 0) > 0">
             <h3>Current Game</h3>
             <div class="current-score">Score: {{ currentScore }}</div>
             <div class="current-time">Time: {{ currentTime }}</div>

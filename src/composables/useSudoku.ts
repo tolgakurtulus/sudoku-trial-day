@@ -116,11 +116,11 @@ export function useSudoku() {
   };
 
   const setCellValue = (row: number, col: number, value: number | null) => {
-    if (gameState.isCompleted || gameState.grid[row][col]?.isGiven || isPaused.value) {
+    if (gameState.isCompleted || gameState.grid[row]![col]!.isGiven || isPaused.value) {
       return;
     }
 
-    const oldValue = gameState.grid[row][col].value;
+    const oldValue = gameState.grid[row]![col]!.value;
 
     if (oldValue === value) {
       return;
@@ -128,15 +128,15 @@ export function useSudoku() {
 
     saveState();
 
-    gameState.grid[row][col].isError = false;
-    gameState.grid[row][col].value = value;
-    gameState.grid[row][col].notes = [];
+    gameState.grid[row]![col]!.isError = false;
+    gameState.grid[row]![col]!.value = value;
+    gameState.grid[row]![col]!.notes = [];
 
     const gridValues = gameState.grid.map((row) => row.map((cell) => cell.value));
     const validation = validator.validateGrid(gridValues);
 
     validation.errors.forEach(([r, c]) => {
-      gameState.grid[r][c].isError = true;
+      gameState.grid[r]![c]!.isError = true;
     });
 
     if (value !== null) {
@@ -206,13 +206,13 @@ export function useSudoku() {
     const shuffleArray = <T>(array: T[]): void => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [array[i], array[j]] = [array[j]!, array[i]!];
       }
     };
 
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
-        if (gridValues[row][col] === null) {
+        if (gridValues[row]![col] === null) {
           const possibleValues = validator.getPossibleValues(gridValues, row, col);
           if (possibleValues.length === 1) {
             return { row, col, value: possibleValues[0] };
@@ -224,7 +224,7 @@ export function useSudoku() {
     const emptyCells: [number, number][] = [];
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
-        if (gridValues[row][col] === null) {
+        if (gridValues[row]![col] === null) {
           emptyCells.push([row, col]);
         }
       }
@@ -246,10 +246,10 @@ export function useSudoku() {
   };
 
   const addNote = (row: number, col: number, note: number) => {
-    if (!gameState.grid[row][col].isGiven && !isPaused.value) {
+    if (!gameState.grid[row]![col]!.isGiven && !isPaused.value) {
       saveState();
 
-      const notes = gameState.grid[row][col].notes;
+      const notes = gameState.grid[row]![col]!.notes;
       const index = notes.indexOf(note);
 
       if (index === -1) {
@@ -352,9 +352,9 @@ export function useSudoku() {
 
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
-        const value = gameState.grid[row][col]?.value;
+        const value = gameState.grid[row]![col]!.value;
         if (value !== null && value !== undefined) {
-          counts[value]++;
+          counts[value!] = (counts[value!] ?? 0) + 1;
         }
       }
     }

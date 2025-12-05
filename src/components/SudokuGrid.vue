@@ -80,7 +80,7 @@ const checkCompletedLines = (grid: SudokuCell[][]) => {
 
 
     for (let r = 0; r < 9; r++) {
-        const values = grid[r].map(c => c.value);
+        const values = grid[r]!.map(c => c.value);
         if (isComplete(values)) rows.push(r);
     }
 
@@ -88,7 +88,7 @@ const checkCompletedLines = (grid: SudokuCell[][]) => {
     for (let c = 0; c < 9; c++) {
         const values = [];
         for (let r = 0; r < 9; r++) {
-            values.push(grid[r][c].value);
+            values.push(grid[r]?.[c]?.value ?? null);
         }
         if (isComplete(values)) cols.push(c);
     }
@@ -101,7 +101,7 @@ const checkCompletedLines = (grid: SudokuCell[][]) => {
 
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                values.push(grid[startRow + i][startCol + j].value);
+                values.push(grid[startRow + i]?.[startCol + j]?.value!);
             }
         }
         if (isComplete(values)) boxes.push(box);
@@ -159,8 +159,6 @@ const isComplete = (values: (number | null)[]): boolean => {
     color: #ff0000;
 }
 
-
-
 .grid-cell.highlight-row,
 .grid-cell.highlight-col {
     background-color: #f0f8ff !important;
@@ -208,9 +206,33 @@ const isComplete = (values: (number | null)[]): boolean => {
 }
 
 .grid-cell.completed {
-    animation: completeFlash 1s ease;
-    background-color: #d4edda;
-    border-color: #28a745;
+    position: relative;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+.grid-cell.completed::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg,
+            transparent,
+            rgba(255, 255, 255, 1),
+            transparent);
+    animation: sweep 2.5s ease-out forwards;
+}
+
+@keyframes sweep {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 120%;
+    }
 }
 
 @media (max-width: 576px) {
@@ -218,32 +240,5 @@ const isComplete = (values: (number | null)[]): boolean => {
         width: 35px;
     }
 
-}
-
-@keyframes completeFlash {
-    0% {
-        background-color: #fff;
-    }
-
-    50% {
-        background-color: #d4edda;
-        transform: scale(1.05);
-    }
-
-    100% {
-        background-color: #d4edda;
-    }
-}
-
-
-
-@keyframes rowFlow {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
 }
 </style>

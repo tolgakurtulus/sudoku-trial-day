@@ -8,11 +8,11 @@ export class SudokuValidator {
     for (let row = 0; row < this.SIZE; row++) {
       const seen = new Set<number>();
       for (let col = 0; col < this.SIZE; col++) {
-        const value = grid[row][col];
+        const value = grid[row]![col]!;
         if (value !== null) {
           if (seen.has(value)) {
             for (let c = 0; c < this.SIZE; c++) {
-              if (grid[row][c] === value) {
+              if (grid[row]?.[c] === value) {
                 errors.push([row, c]);
               }
             }
@@ -25,11 +25,11 @@ export class SudokuValidator {
     for (let col = 0; col < this.SIZE; col++) {
       const seen = new Set<number>();
       for (let row = 0; row < this.SIZE; row++) {
-        const value = grid[row][col];
+        const value = grid[row]![col]!;
         if (value !== null) {
           if (seen.has(value)) {
             for (let r = 0; r < this.SIZE; r++) {
-              if (grid[r][col] === value) {
+              if (grid[r]?.[col] === value) {
                 errors.push([r, col]);
               }
             }
@@ -46,7 +46,7 @@ export class SudokuValidator {
           for (let j = 0; j < this.BOX_SIZE; j++) {
             const row = boxRow * this.BOX_SIZE + i;
             const col = boxCol * this.BOX_SIZE + j;
-            const value = grid[row][col];
+            const value = grid[row]![col]!;
 
             if (value !== null) {
               if (seen.has(value)) {
@@ -54,7 +54,7 @@ export class SudokuValidator {
                   for (let y = 0; y < this.BOX_SIZE; y++) {
                     const r = boxRow * this.BOX_SIZE + x;
                     const c = boxCol * this.BOX_SIZE + y;
-                    if (grid[r][c] === value) {
+                    if (grid[r]?.[c] === value) {
                       errors.push([r, c]);
                     }
                   }
@@ -80,11 +80,11 @@ export class SudokuValidator {
 
   isValid(grid: (number | null)[][], row: number, col: number, num: number): boolean {
     for (let x = 0; x < this.SIZE; x++) {
-      if (grid[row][x] === num) return false;
+      if (grid[row]?.[x] === num) return false;
     }
 
     for (let x = 0; x < this.SIZE; x++) {
-      if (grid[x][col] === num) return false;
+      if (grid[x]?.[col] === num) return false;
     }
 
     const boxRow = Math.floor(row / this.BOX_SIZE) * this.BOX_SIZE;
@@ -92,7 +92,7 @@ export class SudokuValidator {
 
     for (let i = 0; i < this.BOX_SIZE; i++) {
       for (let j = 0; j < this.BOX_SIZE; j++) {
-        if (grid[boxRow + i][boxCol + j] === num) return false;
+        if (grid[boxRow + i]?.[boxCol + j] === num) return false;
       }
     }
 
@@ -102,7 +102,7 @@ export class SudokuValidator {
   isComplete(grid: (number | null)[][]): boolean {
     for (let row = 0; row < this.SIZE; row++) {
       for (let col = 0; col < this.SIZE; col++) {
-        if (grid[row][col] === null) {
+        if (grid[row]![col] === null) {
           return false;
         }
       }
@@ -128,7 +128,7 @@ export class SudokuValidator {
     const possibleValues = this.getPossibleValues(grid, row, col);
 
     if (possibleValues.length === 1) {
-      return possibleValues[0];
+      return possibleValues[0] ?? null;
     }
 
     return null;

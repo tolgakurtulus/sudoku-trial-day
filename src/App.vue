@@ -133,7 +133,7 @@ const handleDigitInput = (digit: number | null) => {
 const handleHint = () => {
   const hint = getHint();
   if (hint) {
-    hintData.value = hint;
+    hintData.value = hint as { row: number; col: number; value: number };
     showHint.value = true;
   }
 };
@@ -289,12 +289,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

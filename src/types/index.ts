@@ -3,7 +3,7 @@ export type SudokuCell = {
   isGiven: boolean;
   isError: boolean;
   notes: number[];
-  wasCorrect?: boolean; // Bu hücre daha önce doğru yapıldı mı?
+  wasCorrect?: boolean;
 };
 
 export type GameDifficulty = 'beginner' | 'intermediate' | 'hard' | 'expert';

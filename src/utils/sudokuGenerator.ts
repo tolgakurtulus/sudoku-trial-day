@@ -29,18 +29,18 @@ export class SudokuGenerator {
   private solve(grid: (number | null)[][]): boolean {
     for (let row = 0; row < this.SIZE; row++) {
       for (let col = 0; col < this.SIZE; col++) {
-        if (grid[row][col] === null) {
+        if (grid[row]![col] === null) {
           const numbers = this.shuffleNumbers();
 
           for (const num of numbers) {
             if (this.isValid(grid, row, col, num)) {
-              grid[row][col] = num;
+              grid[row]![col] = num;
 
               if (this.solve(grid)) {
                 return true;
               }
 
-              grid[row][col] = null;
+              grid[row]![col] = null;
             }
           }
           return false;
@@ -70,15 +70,15 @@ export class SudokuGenerator {
       const row = Math.floor(Math.random() * this.SIZE);
       const col = Math.floor(Math.random() * this.SIZE);
 
-      if (puzzle[row][col] !== null) {
-        const backup = puzzle[row][col];
-        puzzle[row][col] = null;
+      if (puzzle[row]?.[col] !== null) {
+        const backup = puzzle[row]![col]!;
+        puzzle[row]![col] = null;
 
         const tempPuzzle = puzzle.map((r) => [...r]);
         if (this.hasUniqueSolution(tempPuzzle)) {
           removed++;
         } else {
-          puzzle[row][col] = backup;
+          puzzle[row]![col] = backup;
         }
       }
     }
@@ -99,12 +99,12 @@ export class SudokuGenerator {
 
     for (let row = 0; row < this.SIZE; row++) {
       for (let col = 0; col < this.SIZE; col++) {
-        if (grid[row][col] === null) {
+        if (grid[row]![col] === null) {
           for (let num = 1; num <= 9; num++) {
             if (this.isValid(grid, row, col, num)) {
-              grid[row][col] = num;
+              grid[row]![col] = num;
               this.countSolutions(grid, solutions, limit);
-              grid[row][col] = null;
+              grid[row]![col] = null;
 
               if (solutions.length >= limit) return;
             }
@@ -119,11 +119,11 @@ export class SudokuGenerator {
 
   private isValid(grid: (number | null)[][], row: number, col: number, num: number): boolean {
     for (let x = 0; x < this.SIZE; x++) {
-      if (grid[row][x] === num) return false;
+      if (grid[row]?.[x] === num) return false;
     }
 
     for (let x = 0; x < this.SIZE; x++) {
-      if (grid[x][col] === num) return false;
+      if (grid[x]?.[col] === num) return false;
     }
 
     const boxRow = Math.floor(row / this.BOX_SIZE) * this.BOX_SIZE;
@@ -131,7 +131,7 @@ export class SudokuGenerator {
 
     for (let i = 0; i < this.BOX_SIZE; i++) {
       for (let j = 0; j < this.BOX_SIZE; j++) {
-        if (grid[boxRow + i][boxCol + j] === num) return false;
+        if (grid[boxRow + i]?.[boxCol + j] === num) return false;
       }
     }
 
@@ -142,7 +142,7 @@ export class SudokuGenerator {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     for (let i = numbers.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+      [numbers[i], numbers[j]] = [numbers[j]!, numbers[i]!];
     }
     return numbers;
   }

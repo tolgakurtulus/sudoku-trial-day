@@ -9,7 +9,7 @@
 
         <div class="game-controls">
             <button @click="$emit('hint')" :disabled="hintsUsed >= 10 || !startTime || isPaused">💡 Hint ({{ hintsUsed
-            }}/10)</button>
+                }}/10)</button>
             <button @click="$emit('undo')" :disabled="!startTime || isPaused">↩️ Undo</button>
             <button @click="$emit('redo')" :disabled="!startTime || isPaused">↪️ Redo</button>
             <button @click="toggleDraftMode" :disabled="!startTime || isPaused">
@@ -99,7 +99,7 @@ const startTimer = () => {
             if (!props.isPaused && props.startTime) {
                 elapsedSeconds.value = Math.floor((Date.now() - props.startTime) / 1000);
             }
-        }, 1000);
+        }, 1000) as unknown as number;
     }
 };
 
