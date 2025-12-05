@@ -269,7 +269,7 @@ export function useSudoku() {
   };
 
   const resumeGame = () => {
-    if (!pausedTime.value || gameState.isCompleted) return;
+    if (pausedTime.value === null || gameState.isCompleted) return;
     isPaused.value = false;
     gameState.startTime = Date.now() - pausedTime.value;
     pausedTime.value = null;
@@ -384,5 +384,6 @@ export function useSudoku() {
     resetLeaderboard,
     resetGame,
     hasSavedGame,
+    saveToLeaderboard,
   };
 }
